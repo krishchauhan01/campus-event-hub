@@ -1,0 +1,34 @@
+<%- include('partials/head') %>
+
+<section class="hero">
+  <div>
+    <h1>Find your next campus event</h1>
+    <p class="lead">Browse workshops, sports, cultural nights and career fairs. Register in one click, then share a review afterwards.</p>
+    <p><a class="btn" href="/events">Browse all events</a></p>
+  </div>
+  <img src="/img/hero.svg" alt="Illustration of students meeting at an outdoor campus event" width="360" height="240">
+</section>
+
+<section aria-labelledby="upcoming-heading">
+  <h2 id="upcoming-heading">Next three events</h2>
+  <% if (events.length) { %>
+    <div class="grid">
+      <% events.forEach(function (event) { %>
+        <%- include('partials/eventCard', { event: event }) %>
+      <% }); %>
+    </div>
+  <% } else { %>
+    <p>No events are scheduled yet. Check back soon.</p>
+  <% } %>
+</section>
+
+<section aria-labelledby="how-heading">
+  <h2 id="how-heading">How it works</h2>
+  <ol class="steps">
+    <li><strong>Create an account.</strong> Register as a student, or as an organiser if you run events.</li>
+    <li><strong>Register for an event.</strong> Places are limited, and you can cancel at any time.</li>
+    <li><strong>Leave a review.</strong> After attending, rate the event from one to five and add a short comment.</li>
+  </ol>
+</section>
+
+<%- include('partials/foot') %>

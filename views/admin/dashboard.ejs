@@ -1,0 +1,50 @@
+<%- include('../partials/head') %>
+
+<h1>Admin dashboard</h1>
+
+<ul class="stats">
+  <li><span class="stat-number"><%= stats.pending %></span> events waiting for approval</li>
+  <li><span class="stat-number"><%= stats.approved %></span> approved events</li>
+  <li><span class="stat-number"><%= stats.users %></span> registered users</li>
+  <li><span class="stat-number"><%= stats.rsvps %></span> active registrations</li>
+</ul>
+
+<p><a href="/admin/events">Manage all events</a> &middot; <a href="/admin/users">Manage users</a></p>
+
+<section aria-labelledby="pending-heading">
+  <h2 id="pending-heading">Waiting for approval</h2>
+
+  <% if (pending.length) { %>
+    <table>
+      <caption>Events submitted by organisers and not yet published</caption>
+      <thead>
+        <tr>
+          <th scope="col">Title</th>
+          <th scope="col">Organiser</th>
+          <th scope="col">Starts</th>
+          <th scope="col">Decision</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% pending.forEach(function (event) { %>
+          <tr>
+            <th scope="row"><%= event.title %></th>
+            <td><%= event.organizer %></td>
+            <td><%= formatDate(event.starts_at) %></td>
+            <td>
+              <form method="post" action="/admin/events/<%= event.id %>/status" class="inline-form">
+                <input type="hidden" name="returnTo" value="/admin">
+                <button type="submit" name="status" value="approved" class="btn btn-small">Approve <%= event.title %></button>
+                <button type="submit" name="status" value="rejected" class="btn btn-small btn-danger">Reject <%= event.title %></button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  <% } else { %>
+    <p>There are no events waiting for approval.</p>
+  <% } %>
+</section>
+
+<%- include('../partials/foot') %>

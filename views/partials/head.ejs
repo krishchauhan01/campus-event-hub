@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> &middot; Campus Event Hub</title>
+  <meta name="description" content="Campus Event Hub: find, register for and review events happening on campus.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <p class="brand"><a href="/">Campus Event Hub</a></p>
+    <nav aria-label="Main">
+      <ul class="nav-list">
+        <li><a href="/events">Events</a></li>
+        <% if (currentUser) { %>
+          <li><a href="/my-events">My events</a></li>
+          <% if (currentUser.role === 'organizer' || currentUser.role === 'admin') { %>
+            <li><a href="/organizer/events">My organised events</a></li>
+          <% } %>
+          <% if (currentUser.role === 'admin') { %>
+            <li><a href="/admin">Admin</a></li>
+          <% } %>
+          <li>
+            <form action="/logout" method="post" class="inline-form">
+              <button type="submit" class="link-button">Log out (<%= currentUser.name %>)</button>
+            </form>
+          </li>
+        <% } else { %>
+          <li><a href="/login">Log in</a></li>
+          <li><a href="/register">Create account</a></li>
+        <% } %>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap" tabindex="-1">
+  <% if (error) { %><div class="alert alert-error" role="alert"><%= error %></div><% } %>
+  <% if (success) { %><div class="alert alert-success" role="status"><%= success %></div><% } %>

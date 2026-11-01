@@ -1,0 +1,54 @@
+<%- include('../partials/head') %>
+
+<h1>All events</h1>
+<p>Filter by status, then approve, reject or return an event to the pending queue.</p>
+
+<nav aria-label="Filter events by status" class="pagination">
+  <ul>
+    <li><a href="/admin/events">All</a></li>
+    <li><a href="/admin/events?status=pending">Pending</a></li>
+    <li><a href="/admin/events?status=approved">Approved</a></li>
+    <li><a href="/admin/events?status=rejected">Rejected</a></li>
+  </ul>
+</nav>
+
+<% if (events.length) { %>
+  <table>
+    <caption>Events, currently filtered by: <%= status %></caption>
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Organiser</th>
+        <th scope="col">Starts</th>
+        <th scope="col">Status</th>
+        <th scope="col">Change status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% events.forEach(function (event) { %>
+        <tr>
+          <th scope="row"><a href="/events/<%= event.id %>"><%= event.title %></a></th>
+          <td><%= event.organizer %></td>
+          <td><%= formatDate(event.starts_at) %></td>
+          <td><span class="status status-<%= event.status %>"><%= event.status %></span></td>
+          <td>
+            <form method="post" action="/admin/events/<%= event.id %>/status" class="inline-form">
+              <input type="hidden" name="returnTo" value="/admin/events">
+              <label class="visually-hidden" for="status-<%= event.id %>">New status for <%= event.title %></label>
+              <select id="status-<%= event.id %>" name="status">
+                <option value="approved" <%= event.status === 'approved' ? 'selected' : '' %>>Approved</option>
+                <option value="pending" <%= event.status === 'pending' ? 'selected' : '' %>>Pending</option>
+                <option value="rejected" <%= event.status === 'rejected' ? 'selected' : '' %>>Rejected</option>
+              </select>
+              <button type="submit" class="btn btn-small">Save status</button>
+            </form>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } else { %>
+  <p>No events have this status.</p>
+<% } %>
+
+<%- include('../partials/foot') %>

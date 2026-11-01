@@ -1,0 +1,11 @@
+<article class="card">
+  <p class="badge"><%= event.category %></p>
+  <h3><a href="/events/<%= event.id %>"><%= event.title %></a></h3>
+  <p class="meta"><time datetime="<%= event.starts_at %>"><%= formatDate(event.starts_at) %></time></p>
+  <p class="meta"><%= event.location %></p>
+  <p><%= event.description.length > 110 ? event.description.slice(0, 110) + '...' : event.description %></p>
+  <p class="meta">
+    <%= event.going %> of <%= event.capacity %> places taken
+    <% if (event.rating) { %> &middot; Rated <%= event.rating %> out of 5<% } %>
+  </p>
+</article>

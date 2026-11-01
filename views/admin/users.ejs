@@ -1,0 +1,40 @@
+<%- include('../partials/head') %>
+
+<h1>Manage users</h1>
+<p>Change an account type. Students register for events, organisers create them, and administrators moderate everything.</p>
+
+<table>
+  <caption>All registered accounts</caption>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">Events organised</th>
+      <th scope="col">Events attended</th>
+      <th scope="col">Account type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.forEach(function (user) { %>
+      <tr>
+        <th scope="row"><%= user.name %></th>
+        <td><%= user.email %></td>
+        <td><%= user.event_count %></td>
+        <td><%= user.rsvp_count %></td>
+        <td>
+          <form method="post" action="/admin/users/<%= user.id %>/role" class="inline-form">
+            <label class="visually-hidden" for="role-<%= user.id %>">Account type for <%= user.name %></label>
+            <select id="role-<%= user.id %>" name="role">
+              <option value="student" <%= user.role === 'student' ? 'selected' : '' %>>Student</option>
+              <option value="organizer" <%= user.role === 'organizer' ? 'selected' : '' %>>Organiser</option>
+              <option value="admin" <%= user.role === 'admin' ? 'selected' : '' %>>Administrator</option>
+            </select>
+            <button type="submit" class="btn btn-small">Save role</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+  </tbody>
+</table>
+
+<%- include('../partials/foot') %>

@@ -1,0 +1,72 @@
+<%- include('../partials/head') %>
+
+<h1>All events</h1>
+
+<form method="get" action="/events" class="filters" aria-describedby="filter-help">
+  <p class="hint" id="filter-help">Search by title, description or place, then narrow by category and date.</p>
+
+  <div class="field">
+    <label for="q">Search events</label>
+    <input type="search" id="q" name="q" value="<%= q %>" placeholder="For example: football">
+  </div>
+
+  <div class="field">
+    <label for="category">Category</label>
+    <select id="category" name="category">
+      <option value="">All categories</option>
+      <% categories.forEach(function (item) { %>
+        <option value="<%= item %>" <%= category === item ? 'selected' : '' %>><%= item %></option>
+      <% }); %>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="when">Date</label>
+    <select id="when" name="when">
+      <option value="upcoming" <%= when === 'upcoming' ? 'selected' : '' %>>Upcoming only</option>
+      <option value="past" <%= when === 'past' ? 'selected' : '' %>>Past events</option>
+      <option value="all" <%= when === 'all' ? 'selected' : '' %>>All dates</option>
+    </select>
+  </div>
+
+  <div class="filter-actions">
+    <button type="submit" class="btn">Apply filters</button>
+    <a class="link-reset" href="/events">Clear filters</a>
+  </div>
+</form>
+
+<p role="status"><strong><%= total %></strong> <%= total === 1 ? 'event matches' : 'events match' %> your filters.</p>
+
+<% if (events.length) { %>
+  <div class="grid">
+    <% events.forEach(function (event) { %>
+      <%- include('../partials/eventCard', { event: event }) %>
+    <% }); %>
+  </div>
+
+  <% if (pages > 1) { %>
+    <nav class="pagination" aria-label="Event pages">
+      <ul>
+        <% if (page > 1) { %>
+          <li><a href="/events?q=<%= encodeURIComponent(q) %>&amp;category=<%= encodeURIComponent(category) %>&amp;when=<%= when %>&amp;page=<%= page - 1 %>">Previous page</a></li>
+        <% } %>
+        <% for (let p = 1; p <= pages; p++) { %>
+          <li>
+            <% if (p === page) { %>
+              <span aria-current="page">Page <%= p %></span>
+            <% } else { %>
+              <a href="/events?q=<%= encodeURIComponent(q) %>&amp;category=<%= encodeURIComponent(category) %>&amp;when=<%= when %>&amp;page=<%= p %>">Page <%= p %></a>
+            <% } %>
+          </li>
+        <% } %>
+        <% if (page < pages) { %>
+          <li><a href="/events?q=<%= encodeURIComponent(q) %>&amp;category=<%= encodeURIComponent(category) %>&amp;when=<%= when %>&amp;page=<%= page + 1 %>">Next page</a></li>
+        <% } %>
+      </ul>
+    </nav>
+  <% } %>
+<% } else { %>
+  <p>No events match these filters. Try a different keyword, category or date.</p>
+<% } %>
+
+<%- include('../partials/foot') %>

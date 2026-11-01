@@ -1,0 +1,32 @@
+<%- include('partials/head') %>
+
+<h1>My events</h1>
+<p>Events you are registered for, in date order.</p>
+
+<% if (events.length) { %>
+  <table>
+    <caption>Your registrations</caption>
+    <thead>
+      <tr>
+        <th scope="col">Event</th>
+        <th scope="col">When</th>
+        <th scope="col">Where</th>
+        <th scope="col">Registered on</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% events.forEach(function (event) { %>
+        <tr>
+          <th scope="row"><a href="/events/<%= event.id %>"><%= event.title %></a></th>
+          <td><%= formatDate(event.starts_at) %></td>
+          <td><%= event.location %></td>
+          <td><%= formatDate(event.rsvp_at) %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } else { %>
+  <p>You are not registered for any events yet. <a href="/events">Browse events</a> to find one.</p>
+<% } %>
+
+<%- include('partials/foot') %>

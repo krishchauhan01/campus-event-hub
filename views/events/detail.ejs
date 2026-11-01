@@ -1,0 +1,96 @@
+<%- include('../partials/head') %>
+
+<article aria-labelledby="event-title">
+  <p class="badge"><%= event.category %></p>
+  <h1 id="event-title"><%= event.title %></h1>
+
+  <dl class="details">
+    <dt>When</dt>
+    <dd><time datetime="<%= event.starts_at %>"><%= formatDate(event.starts_at) %></time><% if (event.ends_at) { %> to <time datetime="<%= event.ends_at %>"><%= formatDate(event.ends_at) %></time><% } %></dd>
+
+    <dt>Where</dt>
+    <dd><%= event.location %></dd>
+
+    <dt>Organised by</dt>
+    <dd><%= event.organizer %></dd>
+
+    <dt>Places</dt>
+    <dd><%= event.going %> of <%= event.capacity %> taken</dd>
+
+    <dt>Status</dt>
+    <dd><%= event.status.charAt(0).toUpperCase() + event.status.slice(1) %></dd>
+  </dl>
+
+  <% if (event.image_url) { %>
+    <img class="event-image" src="<%= event.image_url %>" alt="Photo for <%= event.title %>" width="640" height="360">
+  <% } %>
+
+  <h2>About this event</h2>
+  <p><%= event.description %></p>
+</article>
+
+<section aria-labelledby="rsvp-heading">
+  <h2 id="rsvp-heading">Your place</h2>
+
+  <% if (event.status !== 'approved') { %>
+    <p>This event is not published yet, so registration is closed.</p>
+  <% } else if (!currentUser) { %>
+    <p><a href="/login?next=/events/<%= event.id %>">Log in</a> or <a href="/register">create an account</a> to register for this event.</p>
+  <% } else if (mine) { %>
+    <p class="alert alert-success" role="status">You are registered for this event.</p>
+    <form method="post" action="/events/<%= event.id %>/rsvp/cancel">
+      <button type="submit" class="btn btn-secondary">Cancel my registration</button>
+    </form>
+  <% } else if (event.going >= event.capacity) { %>
+    <p>This event is full. Places sometimes free up, so check again later.</p>
+  <% } else { %>
+    <form method="post" action="/events/<%= event.id %>/rsvp">
+      <button type="submit" class="btn">Register for this event</button>
+    </form>
+  <% } %>
+</section>
+
+<section aria-labelledby="reviews-heading">
+  <h2 id="reviews-heading">Reviews</h2>
+
+  <% if (summary.count) { %>
+    <p><strong>Average rating <%= summary.avg %> out of 5</strong>, from <%= summary.count %> <%= summary.count === 1 ? 'review' : 'reviews' %>.</p>
+  <% } else { %>
+    <p>No reviews yet.</p>
+  <% } %>
+
+  <% reviews.forEach(function (review) { %>
+    <article class="review" aria-label="Review by <%= review.author %>">
+      <h3><%= review.author %> rated <%= review.rating %> out of 5</h3>
+      <% if (review.comment) { %><p><%= review.comment %></p><% } %>
+      <p class="meta">Posted <%= formatDate(review.created_at) %></p>
+    </article>
+  <% }); %>
+
+  <% if (mine) { %>
+    <h3>Write a review</h3>
+    <p class="hint">One review per person. Submitting again replaces your earlier review.</p>
+    <form method="post" action="/events/<%= event.id %>/reviews" class="form">
+      <fieldset>
+        <legend>Your rating <span class="required-text">(required)</span></legend>
+        <% [1, 2, 3, 4, 5].forEach(function (n) { %>
+          <div class="radio-row">
+            <input type="radio" id="rating-<%= n %>" name="rating" value="<%= n %>" required
+                   <%= myReview && myReview.rating === n ? 'checked' : '' %>>
+            <label for="rating-<%= n %>"><%= n %> out of 5 &mdash; <%= ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'][n - 1] %></label>
+          </div>
+        <% }); %>
+      </fieldset>
+
+      <div class="field">
+        <label for="comment">Your comment <span class="hint-inline">(optional, up to 500 characters)</span></label>
+        <textarea id="comment" name="comment" rows="4" maxlength="500" aria-describedby="comment-hint"><%= myReview ? myReview.comment : '' %></textarea>
+        <p class="hint" id="comment-hint">Say what worked well and what could be better.</p>
+      </div>
+
+      <button type="submit" class="btn">Save review</button>
+    </form>
+  <% } %>
+</section>
+
+<%- include('../partials/foot') %>

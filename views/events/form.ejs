@@ -1,0 +1,80 @@
+<%- include('../partials/head') %>
+
+<h1><%= mode === 'create' ? 'Create an event' : 'Edit event' %></h1>
+<p>Fields marked <span class="required-text">(required)</span> must be filled in. New and edited events are reviewed by an administrator before they appear publicly.</p>
+
+<%- include('../partials/errors', { errors: errors }) %>
+
+<form method="post" action="<%= action %>" class="form">
+  <div class="field">
+    <label for="title">Event title <span class="required-text">(required)</span></label>
+    <input type="text" id="title" name="title" value="<%= values.title || '' %>" required minlength="3" maxlength="120"
+           aria-describedby="title-hint">
+    <p class="hint" id="title-hint">Between 3 and 120 characters, for example "Intro to Web Accessibility".</p>
+  </div>
+
+  <div class="field">
+    <label for="description">Description <span class="required-text">(required)</span></label>
+    <textarea id="description" name="description" rows="6" required minlength="20"
+              aria-describedby="description-hint"><%= values.description || '' %></textarea>
+    <p class="hint" id="description-hint">At least 20 characters. Explain what happens and who should come.</p>
+  </div>
+
+  <div class="field">
+    <label for="category">Category <span class="required-text">(required)</span></label>
+    <select id="category" name="category" required>
+      <option value="">Choose a category</option>
+      <% categories.forEach(function (item) { %>
+        <option value="<%= item %>" <%= values.category === item ? 'selected' : '' %>><%= item %></option>
+      <% }); %>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="location">Location <span class="required-text">(required)</span></label>
+    <input type="text" id="location" name="location" value="<%= values.location || '' %>" required minlength="3"
+           aria-describedby="location-hint">
+    <p class="hint" id="location-hint">Room and building, for example "Lab 204, CSE Building".</p>
+  </div>
+
+  <div class="field">
+    <label for="starts_at">Starts <span class="required-text">(required)</span></label>
+    <input type="datetime-local" id="starts_at" name="starts_at" value="<%= String(values.starts_at || '').slice(0, 16) %>" required>
+  </div>
+
+  <div class="field">
+    <label for="ends_at">Ends <span class="hint-inline">(optional)</span></label>
+    <input type="datetime-local" id="ends_at" name="ends_at" value="<%= String(values.ends_at || '').slice(0, 16) %>"
+           aria-describedby="ends-hint">
+    <p class="hint" id="ends-hint">Leave empty if the event has no fixed end time. Otherwise it must be later than the start.</p>
+  </div>
+
+  <div class="field">
+    <label for="capacity">Capacity <span class="required-text">(required)</span></label>
+    <input type="number" id="capacity" name="capacity" value="<%= values.capacity || 50 %>" min="1" max="500" step="1" required
+           aria-describedby="capacity-hint">
+    <p class="hint" id="capacity-hint">Number of students who can register, between 1 and 500.</p>
+  </div>
+
+  <div class="field">
+    <label for="image_url">Image link <span class="hint-inline">(optional)</span></label>
+    <input type="url" id="image_url" name="image_url" value="<%= values.image_url || '' %>" placeholder="https://example.com/photo.jpg"
+           aria-describedby="image-hint">
+    <p class="hint" id="image-hint">Must start with http:// or https://. Leave empty to show no image.</p>
+  </div>
+
+  <button type="submit" class="btn"><%= mode === 'create' ? 'Submit for approval' : 'Save changes' %></button>
+  <a class="link-reset" href="/organizer/events">Cancel</a>
+</form>
+
+<% if (mode === 'edit') { %>
+  <section aria-labelledby="delete-heading" class="danger-zone">
+    <h2 id="delete-heading">Delete this event</h2>
+    <p>Deleting removes the event and all of its registrations and reviews. This cannot be undone.</p>
+    <form method="post" action="/organizer/events/<%= values.id %>/delete">
+      <button type="submit" class="btn btn-danger">Delete event permanently</button>
+    </form>
+  </section>
+<% } %>
+
+<%- include('../partials/foot') %>

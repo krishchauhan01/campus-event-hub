@@ -1,0 +1,34 @@
+<%- include('../partials/head') %>
+
+<h1>My organised events</h1>
+<p><a class="btn" href="/organizer/events/new">Create a new event</a></p>
+
+<% if (events.length) { %>
+  <table>
+    <caption>Events you have created, newest start date first</caption>
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="col">Starts</th>
+        <th scope="col">Status</th>
+        <th scope="col">Places taken</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% events.forEach(function (event) { %>
+        <tr>
+          <th scope="row"><%= event.title %></th>
+          <td><%= formatDate(event.starts_at) %></td>
+          <td><span class="status status-<%= event.status %>"><%= event.status %></span></td>
+          <td><%= event.going %> of <%= event.capacity %></td>
+          <td><a href="/organizer/events/<%= event.id %>/edit">Edit <%= event.title %></a></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+<% } else { %>
+  <p>You have not created any events yet.</p>
+<% } %>
+
+<%- include('../partials/foot') %>

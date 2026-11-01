@@ -1,0 +1,50 @@
+<%- include('../partials/head') %>
+
+<h1>Create an account</h1>
+<p>Fields marked <span class="required-text">(required)</span> must be filled in.</p>
+
+<%- include('../partials/errors', { errors: errors }) %>
+
+<form method="post" action="/register" class="form">
+  <div class="field">
+    <label for="name">Full name <span class="required-text">(required)</span></label>
+    <input type="text" id="name" name="name" value="<%= values.name || '' %>" autocomplete="name"
+           required aria-describedby="name-hint" <%= errors.length ? 'aria-invalid="true"' : '' %>>
+    <p class="hint" id="name-hint">This name appears on your reviews.</p>
+  </div>
+
+  <div class="field">
+    <label for="email">Email address <span class="required-text">(required)</span></label>
+    <input type="email" id="email" name="email" value="<%= values.email || '' %>" autocomplete="email"
+           required aria-describedby="email-hint" <%= errors.length ? 'aria-invalid="true"' : '' %>>
+    <p class="hint" id="email-hint">We use this only to identify your account.</p>
+  </div>
+
+  <div class="field">
+    <label for="password">Password <span class="required-text">(required)</span></label>
+    <input type="password" id="password" name="password" autocomplete="new-password"
+           required minlength="8" aria-describedby="password-hint" <%= errors.length ? 'aria-invalid="true"' : '' %>>
+    <p class="hint" id="password-hint">At least 8 characters.</p>
+  </div>
+
+  <div class="field">
+    <label for="confirm">Confirm password <span class="required-text">(required)</span></label>
+    <input type="password" id="confirm" name="confirm" autocomplete="new-password"
+           required minlength="8" <%= errors.length ? 'aria-invalid="true"' : '' %>>
+  </div>
+
+  <div class="field">
+    <label for="role">Account type <span class="required-text">(required)</span></label>
+    <select id="role" name="role" required aria-describedby="role-hint">
+      <option value="student" <%= values.role !== 'organizer' ? 'selected' : '' %>>Student: browse and register for events</option>
+      <option value="organizer" <%= values.role === 'organizer' ? 'selected' : '' %>>Organizer: create and manage events</option>
+    </select>
+    <p class="hint" id="role-hint">Organizer accounts need an administrator to approve each event before it is published.</p>
+  </div>
+
+  <button type="submit" class="btn">Create account</button>
+</form>
+
+<p>Already registered? <a href="/login">Log in</a>.</p>
+
+<%- include('../partials/foot') %>
