@@ -87,6 +87,6 @@ The interface is built against the WCAG 2.1 AA criteria used in the marking rubr
 
 | Member | Features | Main files |
 |--------|----------|------------|
-| Member A | 1. Accounts and sessions, 2. Event discovery, 3. Registration and cancellation | `routes/auth.js`, `routes/events.js` (public routes), `routes/rsvp.js`, `views/auth/*`, `views/events/list.ejs`, `views/my-events.ejs` |
-| Member B | 4. Organiser event management, 5. Admin moderation, 6. Ratings and reviews | `routes/events.js` (organiser routes), `routes/admin.js`, `routes/reviews.js`, `views/events/form.ejs`, `views/events/detail.ejs`, `views/admin/*` |
+| Alden Crasta | 1. Accounts and sessions, 2. Event discovery, 3. Registration and cancellation | `routes/auth.js`, `routes/events.js` (public routes), `routes/rsvp.js`, `views/auth/*`, `views/events/list.ejs`, `views/my-events.ejs` |
+| Krish Chauhan | 4. Organiser event management, 5. Admin moderation, 6. Ratings and reviews | `routes/events.js` (organiser routes), `routes/admin.js`, `routes/reviews.js`, `views/events/form.ejs`, `views/events/detail.ejs`, `views/admin/*` |
 | Both | Database schema, styling, accessibility review, testing and report | `db/*`, `public/css/style.css`, `views/partials/*` |
